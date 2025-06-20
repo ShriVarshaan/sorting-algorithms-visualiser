@@ -83,10 +83,18 @@ def main():
     pygame.display.update() #renders the display
     while run:
         clock.tick(60) #max number of times the loop can run per second, kinda like fps
+        draw(draw_info)
         #Gives us all the events that occured since the last loop, it will give it to us in the event variable
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
+
+            if event.type != pygame.KEYDOWN:
+                continue
+
+            if event.key == pygame.K_r: #if we press r it will reset our list
+                lst = generate_starting_list(n, min_val, max_val)
+                draw_info.set_list(lst)
     pygame.quit()
 
 #Just makes sure we are running the module directly before running the main function
