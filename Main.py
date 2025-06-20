@@ -28,7 +28,7 @@ class DrawInformation():
 
     def set_list(self, lst):
         self.lst = lst
-        self.max_value = max(lst)
+        self.max_val = max(lst)
         self.min_val = min(lst)
 
         self.block_width = round((self.width - self.SIDE_PAD)/ len(lst)) #this divides the available screen size between each bar equally
@@ -43,3 +43,29 @@ def generate_starting_list(n, min_val, max_val):
         lst.append(random.randint(min_val, max_val))
 
     return lst
+
+
+def main():
+    run = True
+    clock = pygame.time.Clock()
+    # creating our pygame event loop
+
+    n = 50
+    min_val = 0
+    max_val = 100
+    lst = generate_starting_list(n, min_val, max_val)
+    draw_info = DrawInformation(800, 600, lst)
+
+    pygame.display.update() #renders the display
+    while run:
+        clock.tick(60) #max number of times the loop can run per second, kinda like fps
+        #Gives us all the events that occured since the last loop, it will give it to us in the event variable
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+    pygame.quit()
+
+#Just makes sure we are running the module directly before running the main function
+if __name__ == "__main__":
+    main()
+
