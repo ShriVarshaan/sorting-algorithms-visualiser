@@ -34,3 +34,12 @@ class DrawInformation():
         self.block_width = round((self.width - self.SIDE_PAD)/ len(lst)) #this divides the available screen size between each bar equally
         self.block_height = round((self.height - self.TOP_PAD)/(self.max_val - self.min_val)) #this is so that each bar can be relative to its size
         self.start_x = self.SIDE_PAD // 2
+
+#n will be number of values we want in our list
+def generate_starting_list(n, min_val, max_val):
+    lst = []
+
+    for i in range(n):
+        lst.append(random.randint(min_val, max_val))
+
+    return lst
