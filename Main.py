@@ -17,6 +17,8 @@ class DrawInformation():
 
     GRADIENTS = [(128,128,128), (160,160,160), (192,192,192)] #Different shades of grey
 
+    FONT = pygame.font.SysFont("comicsans", 30)
+    LARGE_FONT = pygame.font.SysFont("comicsans", 40)
     SIDE_PAD = 100 #100px of padding from the left and right hand side so that the bars aren't touching the ends of the window
     TOP_PAD = 150
     #These are constants that are typically used in gui libraries such as pygame, this makes it easier for us to access colours and understand our program
@@ -42,6 +44,13 @@ class DrawInformation():
 
 def draw(draw_info):
     draw_info.window.fill(draw_info.BACKGROUND)
+
+    controls = draw_info.FONT.render("R - Reset | Space - Start Sorting | A - Ascending | D - descending", 1, draw_info.BLACK) #the 1 is essentially the sharpness of the line
+    draw_info.window.blit(controls, (draw_info.width/2 - controls.get_width()/2,5))
+
+    sorting = draw_info.FONT.render("B - Bubble Sort | I - Insertion Sort", 1, draw_info.BLACK)
+    draw_info.window.blit(sorting, (draw_info.width / 2 - sorting.get_width() / 2, 35))
+
     draw_list(draw_info)
     pygame.display.update()
 
@@ -76,9 +85,11 @@ def main():
     min_val = 0
     max_val = 100
     lst = generate_starting_list(n, min_val, max_val)
-    draw_info = DrawInformation(800, 600, lst)
+    draw_info = DrawInformation(1000, 600, lst)
 
     draw(draw_info)
+    sorting = False
+    ascending = True
 
     pygame.display.update() #renders the display
     while run:
@@ -88,13 +99,18 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
-
-            if event.type != pygame.KEYDOWN:
+            elif event.type != pygame.KEYDOWN:
                 continue
-
-            if event.key == pygame.K_r: #if we press r it will reset our list
+            elif event.key == pygame.K_r: #if we press r it will reset our list
                 lst = generate_starting_list(n, min_val, max_val)
                 draw_info.set_list(lst)
+                sorting = False
+            elif event.key == pygame.K_SPACE and sorting == False:
+                sorting = True
+            elif event.key == pygame.K_a and sorting == False:
+                ascending = True
+            elif event.key == pygame.k_d and sorting == False:
+                ascending = False
     pygame.quit()
 
 #Just makes sure we are running the module directly before running the main function
