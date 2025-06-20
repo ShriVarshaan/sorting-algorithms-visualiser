@@ -11,7 +11,11 @@ class DrawInformation():
     GREEN = (0, 255, 0)
     BLUE = (0, 0, 255)
     GREY = (128,128,128)
-    BACKGROUND = BLACK
+    BACKGROUND = WHITE
+
+    #We will be making the blocks all in slightly different colours so we can see them
+
+    GRADIENTS = [(128,128,128), (160,160,160), (192,192,192)] #Different shades of grey
 
     SIDE_PAD = 100 #100px of padding from the left and right hand side so that the bars aren't touching the ends of the window
     TOP_PAD = 150
@@ -35,6 +39,23 @@ class DrawInformation():
         self.block_height = round((self.height - self.TOP_PAD)/(self.max_val - self.min_val)) #this is so that each bar can be relative to its size
         self.start_x = self.SIDE_PAD // 2
 
+
+def draw(draw_info):
+    draw_info.window.fill(draw_info.BACKGROUND)
+    draw_list(draw_info)
+    pygame.display.update()
+
+#Function to draw our bars onto the display
+def draw_list(draw_info):
+
+    for i, val in enumerate(draw_info.lst):
+        #i will be index we get from enumerate, start_x tells us where to start on screen, so adding to it i * block width will give us the locations of the next blocks
+        x = draw_info.start_x + i * draw_info.block_width
+        y = draw_info.height  - ((val - draw_info.min_val) * draw_info.block_height) #We will figure out the height of the rectangle then subtract from the height of the screen cause in pygame y=0 is on the top left and it increases as we go down the screen
+
+        colour = draw_info.GRADIENTS[i % 3] #each element beside each other will be in a different gray
+
+        pygame.draw.rect(draw_info.window, colour, (x, y, draw_info.block_width, draw_info.height))
 #n will be number of values we want in our list
 def generate_starting_list(n, min_val, max_val):
     lst = []
@@ -48,6 +69,7 @@ def generate_starting_list(n, min_val, max_val):
 def main():
     run = True
     clock = pygame.time.Clock()
+
     # creating our pygame event loop
 
     n = 50
@@ -55,6 +77,8 @@ def main():
     max_val = 100
     lst = generate_starting_list(n, min_val, max_val)
     draw_info = DrawInformation(800, 600, lst)
+
+    draw(draw_info)
 
     pygame.display.update() #renders the display
     while run:
