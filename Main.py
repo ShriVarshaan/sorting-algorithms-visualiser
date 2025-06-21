@@ -105,6 +105,31 @@ def bubble_sort(draw_info, ascending):
                     draw_list(draw_info, {j: draw_info.GREEN, j + 1: draw_info.RED}, True)
                     yield True
     return lst
+
+def insertion_sort(draw_info, ascending):
+    lst = draw_info.lst
+
+    for i in range(1, len(lst)):
+        key = lst[i]
+        j = i - 1
+        if ascending:
+            while j >= 0 and lst[j] > key:
+                lst[j + 1] = lst[j]
+                draw_list(draw_info, {j: draw_info.GREEN, j + 1: draw_info.RED}, True)
+                j -= 1
+                yield True
+        else:
+            while j >= 0 and lst[j] < key:
+                lst[j + 1] = lst[j]
+                draw_list(draw_info, {j: draw_info.GREEN, j + 1: draw_info.RED}, True)
+                j -= 1
+                yield True
+
+        lst[j + 1] = key
+        yield True
+    return lst
+
+
 def main():
     run = True
     clock = pygame.time.Clock()
@@ -127,7 +152,7 @@ def main():
 
     pygame.display.update() #renders the display
     while run:
-        #clock.tick(120) #max number of times the loop can run per second, kinda like fps
+        clock.tick(60) #max number of times the loop can run per second, kinda like fps
         if sorting:
             try:
                 next(sorting_algorithm_generator)
@@ -152,6 +177,12 @@ def main():
                 ascending = True
             elif event.key == pygame.K_d and sorting == False:
                 ascending = False
+            elif event.key == pygame.K_b and sorting == False:
+                sorting_algorithm = bubble_sort
+                sorting_algo_name = "bubble sort"
+            elif event.key == pygame.K_i and sorting == False:
+                sorting_algorithm = insertion_sort
+                sorting_algo_name = "insertion sort"
     pygame.quit()
 
 #Just makes sure we are running the module directly before running the main function
