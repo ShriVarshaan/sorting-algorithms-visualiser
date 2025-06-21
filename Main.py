@@ -132,13 +132,16 @@ def insertion_sort(draw_info, ascending):
 def quick_sort(draw_info, ascending, left=0, right=49):
     lst = draw_info.lst
 
-    if left < right:
-        pivot = partition(lst, left, right, ascending)
-        quick_sort(lst, ascending, left, pivot - 1)
-        yield True
-        quick_sort(lst, ascending, pivot + 1, right)
-        yield True
+    stack = [(0, len(lst) - 1)]
 
+    while stack:
+        low, high = stack.pop()
+
+        if low < high:
+            pivot_index = partition(lst, low, high, ascending)
+            stack.append((low, pivot_index - 1))
+            stack.append((pivot_index + 1, high))
+            yield True
 
 def partition(lst, left, right, ascending):
     pivotElement = lst[right]
