@@ -129,6 +129,33 @@ def insertion_sort(draw_info, ascending):
         yield True
     return lst
 
+def quick_sort(draw_info, ascending, left=0, right=49):
+    lst = draw_info.lst
+
+    if left < right:
+        pivot = partition(lst, left, right, ascending)
+        quick_sort(lst, ascending, left, pivot - 1)
+        yield True
+        quick_sort(lst, ascending, pivot + 1, right)
+        yield True
+
+
+def partition(lst, left, right, ascending):
+    pivotElement = lst[right]
+    j = left - 1
+    for i in range(left, right):
+        if ascending:
+            if lst[i] < pivotElement:
+                j += 1
+                lst[i], lst[j] = lst[j], lst[i]
+        else:
+            if lst[i] > pivotElement:
+                j += 1
+                lst[i], lst[j] = lst[j], lst[i]
+    j += 1
+    lst[j], lst[right] = lst[right], lst[j]
+    return j
+
 
 def main():
     run = True
@@ -160,7 +187,7 @@ def main():
                 sorting = False
         else:
             draw(draw_info, sorting_algo_name, ascending)
-        #Gives us all the events that occured since the last loop, it will give it to us in the event variable
+        #Gives us all the events that occurred since the last loop, it will give it to us in the event variable
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
@@ -183,6 +210,9 @@ def main():
             elif event.key == pygame.K_i and sorting == False:
                 sorting_algorithm = insertion_sort
                 sorting_algo_name = "insertion sort"
+            elif event.key == pygame.K_q and sorting == False:
+                sorting_algorithm = quick_sort
+                sorting_algo_name = "quick sort"
     pygame.quit()
 
 #Just makes sure we are running the module directly before running the main function
