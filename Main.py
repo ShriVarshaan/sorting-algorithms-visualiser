@@ -139,6 +139,7 @@ def quick_sort(draw_info, ascending, left=0, right=49):
 
         if low < high:
             pivot_index = partition(lst, low, high, ascending)
+            draw_list(draw_info, {low: draw_info.GREEN, high: draw_info.RED}, True)
             stack.append((low, pivot_index - 1))
             stack.append((pivot_index + 1, high))
             yield True
@@ -182,7 +183,7 @@ def main():
 
     pygame.display.update() #renders the display
     while run:
-        clock.tick(60) #max number of times the loop can run per second, kinda like fps
+        clock.tick(30) #max number of times the loop can run per second, kinda like fps
         if sorting:
             try:
                 next(sorting_algorithm_generator)
