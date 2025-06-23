@@ -51,7 +51,7 @@ def draw(draw_info, algo_name, ascending):
     controls = draw_info.FONT.render("R - Reset | Space - Start Sorting | A - Ascending | D - descending", 1, draw_info.BLACK) #the 1 is essentially the sharpness of the line
     draw_info.window.blit(controls, (draw_info.width/2 - controls.get_width()/2,45))
 
-    sorting = draw_info.FONT.render("B - Bubble Sort | I - Insertion Sort", 1, draw_info.BLACK)
+    sorting = draw_info.FONT.render("B - Bubble Sort | I - Insertion Sort | Q - Quick sort", 1, draw_info.BLACK)
     draw_info.window.blit(sorting, (draw_info.width / 2 - sorting.get_width() / 2, 75))
 
     draw_list(draw_info)
@@ -152,16 +152,18 @@ def partition(lst, left, right, ascending, draw_info):
             if lst[i] < pivotElement:
                 j += 1
                 lst[i], lst[j] = lst[j], lst[i]
-                draw_list(draw_info, {j: draw_info.GREEN, i: draw_info.RED}, True)
+                draw_list(draw_info, {j: draw_info.GREEN, i: draw_info.RED, right: draw_info.BLUE}, True)
                 yield True
         else:
             if lst[i] > pivotElement:
                 j += 1
                 lst[i], lst[j] = lst[j], lst[i]
-                draw_list(draw_info, {j: draw_info.GREEN, i: draw_info.RED}, True)
+                draw_list(draw_info, {j: draw_info.GREEN, i: draw_info.RED, right: draw_info.BLUE}, True)
                 yield True
     j += 1
     lst[j], lst[right] = lst[right], lst[j]
+    draw_list(draw_info, {right: (255,192,203), j: draw_info.BLACK}, True)
+    yield True
     return j
 
 
@@ -187,7 +189,7 @@ def main():
 
     pygame.display.update() #renders the display
     while run:
-        clock.tick(60) #max number of times the loop can run per second, kinda like fps
+        clock.tick(5) #max number of times the loop can run per second, kinda like fps
         if sorting:
             try:
                 next(sorting_algorithm_generator)
