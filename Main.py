@@ -104,7 +104,7 @@ def bubble_sort(draw_info, ascending):
                     lst[j], lst[j + 1] = lst[j + 1], lst[j]
                     draw_list(draw_info, {j: draw_info.GREEN, j + 1: draw_info.RED}, True)
                     yield True
-    return lst
+    #return lst
 
 def insertion_sort(draw_info, ascending):
     lst = draw_info.lst
@@ -127,9 +127,9 @@ def insertion_sort(draw_info, ascending):
 
         lst[j + 1] = key
         yield True
-    return lst
+    #return lst
 
-def quick_sort(draw_info, ascending, left=0, right=49):
+def quick_sort(draw_info, ascending):
     lst = draw_info.lst
 
     stack = [(0, len(lst) - 1)]
@@ -138,13 +138,13 @@ def quick_sort(draw_info, ascending, left=0, right=49):
         low, high = stack.pop()
 
         if low < high:
-            pivot_index = partition(lst, low, high, ascending)
-            draw_list(draw_info, {low: draw_info.GREEN, high: draw_info.RED}, True)
+
+            pivot_index = yield from partition(lst, low, high, ascending, draw_info)
             stack.append((low, pivot_index - 1))
             stack.append((pivot_index + 1, high))
-            yield True
+    #return lst
 
-def partition(lst, left, right, ascending):
+def partition(lst, left, right, ascending, draw_info):
     pivotElement = lst[right]
     j = left - 1
     for i in range(left, right):
@@ -152,10 +152,14 @@ def partition(lst, left, right, ascending):
             if lst[i] < pivotElement:
                 j += 1
                 lst[i], lst[j] = lst[j], lst[i]
+                draw_list(draw_info, {j: draw_info.GREEN, i: draw_info.RED}, True)
+                yield True
         else:
             if lst[i] > pivotElement:
                 j += 1
                 lst[i], lst[j] = lst[j], lst[i]
+                draw_list(draw_info, {j: draw_info.GREEN, i: draw_info.RED}, True)
+                yield True
     j += 1
     lst[j], lst[right] = lst[right], lst[j]
     return j
@@ -183,7 +187,7 @@ def main():
 
     pygame.display.update() #renders the display
     while run:
-        clock.tick(30) #max number of times the loop can run per second, kinda like fps
+        clock.tick(60) #max number of times the loop can run per second, kinda like fps
         if sorting:
             try:
                 next(sorting_algorithm_generator)
