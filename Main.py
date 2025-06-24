@@ -166,6 +166,47 @@ def partition(lst, left, right, ascending, draw_info):
     yield True
     return j
 
+#We will use iterative merge sort, this works bottom up, starts with individual elements and builds up
+def merge(arr, l, m, r):
+    n1 = m - l + 1
+    n2 = r - m
+    L = arr[l : m+1]
+    R = arr[m+1 : r+1]
+
+    i = j = 0
+    k = l
+
+    while i < n1 and j < n2:
+        if L[i] <= R[j]:
+            arr[k] = L[i]
+            i += 1
+        else:
+            arr[k] = R[j]
+            j += 1
+        k += 1
+
+    # Copy remaining elements
+    while i < n1:
+        arr[k] = L[i]
+        i += 1
+        k += 1
+    while j < n2:
+        arr[k] = R[j]
+        j += 1
+        k += 1
+
+def merge_sort(arr):
+    n = len(arr)
+    curr_size = 1
+
+    while curr_size < n:
+        for left_start in range(0, n, 2 * curr_size):
+            mid = min(left_start + curr_size - 1, n - 1)
+            right_end = min(left_start + 2 * curr_size - 1, n - 1)
+            if mid < right_end:
+                merge(arr, left_start, mid, right_end)
+        curr_size *= 2
+
 
 def main():
     run = True
