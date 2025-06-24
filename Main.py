@@ -167,36 +167,49 @@ def partition(lst, left, right, ascending, draw_info):
     return j
 
 #We will use iterative merge sort, this works bottom up, starts with individual elements and builds up
-def merge(arr, l, m, r):
+def merge(draw_info, l, m, r, ascending):
     n1 = m - l + 1
     n2 = r - m
-    L = arr[l : m+1]
-    R = arr[m+1 : r+1]
+
+    lst = draw_info.lst
+
+    L = lst[l: m + 1]
+    R = lst[m + 1: r + 1]
 
     i = j = 0
     k = l
 
     while i < n1 and j < n2:
         if L[i] <= R[j]:
-            arr[k] = L[i]
+            lst[k] = L[i]
+            draw_list(draw_info, {j: draw_info.GREEN, i: draw_info.RED, k: draw_info.BLUE}, True)
+            yield True
             i += 1
         else:
-            arr[k] = R[j]
+            lst[k] = R[j]
+            draw_list(draw_info, {j: draw_info.GREEN, i: draw_info.RED, k: draw_info.BLUE}, True)
+            yield True
             j += 1
         k += 1
 
     # Copy remaining elements
     while i < n1:
-        arr[k] = L[i]
+        lst[k] = L[i]
+        draw_list(draw_info, {j: draw_info.GREEN, i: draw_info.RED, k: draw_info.BLUE}, True)
+        yield True
         i += 1
         k += 1
     while j < n2:
-        arr[k] = R[j]
+        lst[k] = R[j]
+        draw_list(draw_info, {j: draw_info.GREEN, i: draw_info.RED, k: draw_info.BLUE}, True)
+        yield True
         j += 1
         k += 1
 
-def merge_sort(arr):
-    n = len(arr)
+def merge_sort(draw_info, ascending):
+
+    lst = draw_info.lst
+    n = len(lst)
     curr_size = 1
 
     while curr_size < n:
@@ -204,7 +217,7 @@ def merge_sort(arr):
             mid = min(left_start + curr_size - 1, n - 1)
             right_end = min(left_start + 2 * curr_size - 1, n - 1)
             if mid < right_end:
-                merge(arr, left_start, mid, right_end)
+                yield from merge(draw_info, left_start, mid, right_end, ascending)
         curr_size *= 2
 
 
@@ -264,6 +277,9 @@ def main():
             elif event.key == pygame.K_q and sorting == False:
                 sorting_algorithm = quick_sort
                 sorting_algo_name = "quick sort"
+            elif event.key == pygame.K_m and sorting == False:
+                sorting_algo_name = "merge sort"
+                sorting_algorithm = merge_sort
     pygame.quit()
 
 #Just makes sure we are running the module directly before running the main function
